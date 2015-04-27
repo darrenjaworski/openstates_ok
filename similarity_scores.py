@@ -9,4 +9,6 @@
         # for bill in bills
             # generate scores based on similarity
 
-        # write score for legislator 1 to every other
+        # store score for legislator 1 to another legislator
+
+    # write scores into a single row

@@ -11,10 +11,26 @@ oklahoma_lower_bills = openstates.bills(
     search_window='session'
 )
 
+# oklahoma legislators
+ok_legislators = openstates.legislators(
+    state='ok',
+    active='true'
+)
+
+# we need an array of the legislators ids
+ok_legislators_array = []
+for legislator in ok_legislators:
+    ok_legislators_array.append(legislator['leg_id'])
+
 # create or open votes.csv file, with read/write
-with open('votes.csv', 'wb') as f:
+with open('votes.csv', 'w') as f:
     # create writer object on the file we named f
-    writer = csv.writer(f)
+    # extrasaction parameter means that if there is a missing or extra leg_id in our array
+    # then the writer will continue regardless
+    writer = csv.DictWriter(f, fieldnames=ok_legislators_array, extrasaction='ignore')
+
+    # write our header row with the legislators ids
+    writer.writeheader()
 
     # loop through the bills from the previous api call
     for bill in oklahoma_lower_bills:
@@ -26,12 +42,6 @@ with open('votes.csv', 'wb') as f:
             session='2015-2016',
             bill_id=bill['bill_id']
         )
-
-        # create vote array for a row on our csv
-        vote = [
-            bill['bill_id'],
-            oklahoma_bill_details['votes']
-        ]
 
         # loop through votes looking for the third reading
         for bill_votes in oklahoma_bill_details['votes']:
@@ -50,15 +60,20 @@ with open('votes.csv', 'wb') as f:
 
                 # yes votes will be labeled 1
                 for yes_votes in bill_votes['yes_votes']:
-                    total_votes[other_votes['leg_id']] = 1
+                    total_votes[yes_votes['leg_id']] = 1
 
                 # no votes will be labeled 2
                 for no_votes in bill_votes['no_votes']:
-                    total_votes[other_votes['leg_id']] = 2
+                    total_votes[no_votes['leg_id']] = 2
 
             # not third reading
             else:
                 print "Not third reading."
 
-        # this part isn't ready yet, but we'll organize the data and write it to a csv file.
-        #writer.writerow(vote)
+            # lets try to write the total_votes using a DictWriter
+            # this should let us match the specific columns to the specific voters
+            try:
+                writer.writerow(total_votes)
+            # catch exception and print in console.
+            except ValueError:
+                print "Something is off in writing your csv"

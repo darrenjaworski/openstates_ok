@@ -7,7 +7,7 @@
     # for legislator in legislators
 
         # for bill in bills
-            # generate scores based on similarity
+            # generate score based on similarity of voting
 
         # store score for legislator 1 to another legislator
 

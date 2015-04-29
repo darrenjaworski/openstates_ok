@@ -41,9 +41,24 @@ with open('votes.csv', 'wb') as f:
 
             # if the motion matches 'third'
             if pattern.match(bill_votes['motion']):
-                print pattern.match(bill_votes['motion'])
+
+                total_votes = {}
+
+                # other votes will be nominally labeled 3
+                for other_votes in bill_votes['other_votes']:
+                    total_votes[other_votes['leg_id']] = 3
+
+                # yes votes will be labeled 1
+                for yes_votes in bill_votes['yes_votes']:
+                    total_votes[other_votes['leg_id']] = 1
+
+                # no votes will be labeled 2
+                for no_votes in bill_votes['no_votes']:
+                    total_votes[other_votes['leg_id']] = 2
+
+            # not third reading
             else:
-                print "no match"
+                print "Not third reading."
 
         # this part isn't ready yet, but we'll organize the data and write it to a csv file.
         #writer.writerow(vote)

@@ -18,7 +18,7 @@ ok_legislators = openstates.legislators(
 )
 
 # we need an array of the legislators ids
-ok_legislators_array = []
+ok_legislators_array = ['bill_id']
 for legislator in ok_legislators:
     ok_legislators_array.append(legislator['leg_id'])
 
@@ -53,6 +53,8 @@ with open('votes.csv', 'w') as f:
             if pattern.match(bill_votes['motion']):
 
                 total_votes = {}
+
+                total_votes['bill_id'] = bill_votes['bill_id']
 
                 # other votes will be nominally labeled 3
                 for other_votes in bill_votes['other_votes']:

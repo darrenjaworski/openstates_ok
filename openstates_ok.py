@@ -22,7 +22,7 @@ ok_legislators_array = []
 for legislator in ok_legislators:
     ok_legislators_array.append(legislator['leg_id'])
 
-# create or open votes.csv file, with read/write
+# create or open votes.csv file, with write
 with open('votes.csv', 'w') as f:
     # create writer object on the file we named f
     # extrasaction parameter means that if there is a missing or extra leg_id in our array
@@ -74,6 +74,7 @@ with open('votes.csv', 'w') as f:
             # this should let us match the specific columns to the specific voters
             try:
                 writer.writerow(total_votes)
-            # catch exception and print in console.
+
+            # catch exception and print in console
             except ValueError:
-                print "Something is off in writing your csv"
+                print "Something is off in writing your csv."

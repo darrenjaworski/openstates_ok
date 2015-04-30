@@ -22,7 +22,7 @@ with open('scores.csv', 'w') as w:
     writer.writeheader()
 
     for legislatorA in ok_legislators_array:
-        #print "Going through " + legislatorA
+        print "Going through " + legislatorA
 
         leg_scores = {}
         leg_scores['leg_id'] = legislatorA
@@ -55,7 +55,7 @@ with open('scores.csv', 'w') as w:
                     leg_scores[legislatorB] = score
 
                 except ZeroDivisionError:
-                    print "No votes were comparable."
+                    #print "No votes were comparable."
                     leg_scores[legislatorB] = "x"
 
         writer.writerow(leg_scores)

@@ -15,34 +15,47 @@ ok_legislators_array = []
 for legislator in ok_legislators:
     ok_legislators_array.append(legislator['leg_id'])
 
-for legislatorA in ok_legislators_array:
-    print "Going through " + legislatorA
+with open('scores.csv', 'w') as w:
+    writer = csv.DictWriter(w, fieldnames=ok_legislators_array, extrasaction='ignore')
+    writer.writeheader()
 
-    for legislatorB in ok_legislators_array:
-        print "Comparing " + legislatorA + " to " + legislatorB
+    for legislatorA in ok_legislators_array:
+        print "Going through " + legislatorA
 
-        with open('votes.csv') as f:
-            reader = csv.DictReader(f)
+        for legislatorB in ok_legislators_array:
+            print "Comparing " + legislatorA + " to " + legislatorB
 
-            voteCount = 0
-            voteSame = 0
-            notComparable = 0
+            with open('votes.csv') as f:
+                reader = csv.DictReader(f)
 
-            for bill in reader:
-                if not bill[legislatorA] or not bill[legislatorB]:
-                    notComparable += 1
-                    #print "not comparable"
-                elif bill[legislatorA] == bill[legislatorB]:
-                    voteCount += 1
-                    voteSame += 1
-                    #print "same vote"
-                else:
-                    voteCount += 1
-                    #print "different vote"
+                voteCount = 0
+                voteSame = 0
+                notComparable = 0
+
+                for bill in reader:
+                    if not bill[legislatorA] or not bill[legislatorB]:
+                        notComparable += 1
+                        #print "not comparable"
+                    elif bill[legislatorA] == bill[legislatorB]:
+                        voteCount += 1
+                        voteSame += 1
+                        #print "same vote"
+                    else:
+                        voteCount += 1
+                        #print "different vote"
+
+                leg_scores = {}
+
+                try:
+                    score = float(voteSame) / voteCount
+                    leg_scores[legislatorB] = score
+
+                except ZeroDivisionError:
+                    print "No votes were comparable."
+                    leg_scores[legislatorB] = "x"
 
             try:
-                score = float(voteSame) / voteCount
-            except ZeroDivisionError:
-                print "No votes were comparable."
-
-            print legislatorA + " | " + legislatorB + ": " + str(score)
+                writer.writerow(leg_scores)
+                print "wrote something"
+            except ValueError:
+                print "blew up"

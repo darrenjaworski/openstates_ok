@@ -2,17 +2,6 @@
 # and create a similarity score for each legislator to
 # one another.
 
-# for legislator in legislators
-    # compare legislator 1 to every other by bill votes
-    # for legislator in legislators
-
-        # for bill in bills
-            # generate score based on similarity of voting
-
-        # store score for legislator 1 to another legislator
-
-    # write scores into a single row
-
 import csv
 from sunlight import openstates
 
@@ -50,3 +39,10 @@ for legislatorA in ok_legislators_array:
                 else:
                     voteCount += 1
                     #print "different vote"
+
+            try:
+                score = float(voteSame) / voteCount
+            except ZeroDivisionError:
+                print "No votes were comparable."
+
+            print legislatorA + " | " + legislatorB + ": " + str(score)

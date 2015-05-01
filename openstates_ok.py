@@ -19,7 +19,7 @@ ok_legislators = openstates.legislators(
 # we need an array of the legislators ids
 # with the first value being bill_id for our
 # csv header row
-ok_legislators_array = ['bill_id', 'chamber']
+ok_legislators_array = ['bill_id', 'chamber', 'vote_id']
 for legislator in ok_legislators:
     ok_legislators_array.append(legislator['leg_id'])
 
@@ -56,7 +56,8 @@ with open('votes.csv', 'w') as f:
                 total_votes = {}
 
                 # bill id added as a reference column for each vote
-                total_votes['bill_id'] = bill_votes['vote_id']
+                total_votes['bill_id'] = bill_votes['bill_id']
+                total_votes['vote_id'] = bill_votes['vote_id']
                 total_votes['chamber'] = bill_votes['chamber']
 
                 # other votes will be nominally labeled 3
@@ -71,11 +72,11 @@ with open('votes.csv', 'w') as f:
                 for no_votes in bill_votes['no_votes']:
                     total_votes[no_votes['leg_id']] = 2
 
-            # lets try to write the total_votes using a DictWriter
-            # this should let us match the specific columns to the specific voters
-            try:
-                writer.writerow(total_votes)
+                # lets try to write the total_votes using a DictWriter
+                # this should let us match the specific columns to the specific voters
+                try:
+                    writer.writerow(total_votes)
 
-            # # catch exception and print in console
-            except ValueError:
-                print "Something is off in writing your csv."
+                # catch exception and print in console
+                except ValueError:
+                    print "Something is off in writing your csv."

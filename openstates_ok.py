@@ -7,8 +7,7 @@ import re
 # see example output: http://sunlightlabs.github.io/openstates-api/bills.html#examples/bill-search
 oklahoma_lower_bills = openstates.bills(
     state='ok',
-    chamber='lower',
-    search_window='session'
+    search_window='term:2015-2016'
 )
 
 # oklahoma legislators
@@ -20,7 +19,7 @@ ok_legislators = openstates.legislators(
 # we need an array of the legislators ids
 # with the first value being bill_id for our
 # csv header row
-ok_legislators_array = ['bill_id']
+ok_legislators_array = ['bill_id', 'chamber']
 for legislator in ok_legislators:
     ok_legislators_array.append(legislator['leg_id'])
 
@@ -52,12 +51,13 @@ with open('votes.csv', 'w') as f:
             pattern = re.compile('third', re.IGNORECASE)
 
             # if the motion matches 'third'
-            if pattern.match(bill_votes['motion']):
+            if pattern.search(bill_votes['motion']):
 
                 total_votes = {}
 
                 # bill id added as a reference column for each vote
-                total_votes['bill_id'] = bill_votes['bill_id']
+                total_votes['bill_id'] = bill_votes['vote_id']
+                total_votes['chamber'] = bill_votes['chamber']
 
                 # other votes will be nominally labeled 3
                 for other_votes in bill_votes['other_votes']:
@@ -71,15 +71,11 @@ with open('votes.csv', 'w') as f:
                 for no_votes in bill_votes['no_votes']:
                     total_votes[no_votes['leg_id']] = 2
 
-            # not third reading
-            else:
-                print "Not third reading."
-
             # lets try to write the total_votes using a DictWriter
             # this should let us match the specific columns to the specific voters
             try:
                 writer.writerow(total_votes)
 
-            # catch exception and print in console
+            # # catch exception and print in console
             except ValueError:
                 print "Something is off in writing your csv."

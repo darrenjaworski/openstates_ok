@@ -60,10 +60,6 @@ with open('votes.csv', 'w') as f:
                 total_votes['vote_id'] = bill_votes['vote_id']
                 total_votes['chamber'] = bill_votes['chamber']
 
-                # other votes will be nominally labeled 3
-                for other_votes in bill_votes['other_votes']:
-                    total_votes[other_votes['leg_id']] = 3
-
                 # yes votes will be labeled 1
                 for yes_votes in bill_votes['yes_votes']:
                     total_votes[yes_votes['leg_id']] = 1

@@ -5,7 +5,7 @@ import re
 
 # api call using openstates package.
 # see example output: http://sunlightlabs.github.io/openstates-api/bills.html#examples/bill-search
-oklahoma_lower_bills = openstates.bills(
+oklahoma_bills = openstates.bills(
     state='ok',
     search_window='term:2015-2016'
 )
@@ -34,7 +34,7 @@ with open('votes.csv', 'w') as f:
     writer.writeheader()
 
     # loop through the bills from the previous api call
-    for bill in oklahoma_lower_bills:
+    for bill in oklahoma_bills:
 
         # get individual details on the bills, i.e. votes
         # see example output: http://sunlightlabs.github.io/openstates-api/bills.html#examples/bill-detail
